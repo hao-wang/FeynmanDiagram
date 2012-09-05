@@ -6,7 +6,7 @@ struct interaction * I;									//'I[...]' contains all the interaction types fr
 int TotExterParticles;
 struct particleType P[MAX_E_PARTICLES];					//'P[...]' contains all the external particles from the input file
 int TotLoops;
-int TotVertexes;
+int TotVertices;
 
 /////////////// feynman diagram ////////////////////////
 struct feynDiagram FD;

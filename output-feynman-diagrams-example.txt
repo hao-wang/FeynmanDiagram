@@ -20,7 +20,7 @@ P1:	(F-1)
 P2:	(F1)
 P3:	(F5)
 P4:	(F-5)
->>> the internal vertexes
+>>> the internal vertices
 H1
 H2
 H3

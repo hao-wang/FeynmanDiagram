@@ -57,7 +57,7 @@ void obtainInput()
 		fscanf(fIn,"%s",mark);
 		if(strcmp(mark,">>>")==0){
 			fscanf(fIn,"%d",&TotLoops);
-			TotVertexes=(TotExterParticles-2)+2*TotLoops;
+			TotVertices=(TotExterParticles-2)+2*TotLoops;
 			break;}
 	}while(!feof(fIn));
 	/////////////////////////////
@@ -92,9 +92,9 @@ void writeOutputHead()
 		fprintf(FileOut, "P%d:\t(%c%d)\n", i+1, P[i].BorF, P[i].ID);}
 	//////////////////////
 	fprintf(FileOut, "\
->>> the internal vertexes\n\
+>>> the internal vertices\n\
 ");
-	for(i=0; i<TotVertexes; i++){
+	for(i=0; i<TotVertices; i++){
 		fprintf(FileOut, "H%d\n", i+1);}
 	//////////////////////
 	fprintf(FileOut, "\n\
@@ -121,7 +121,7 @@ void writeFeynDiag(struct feynDiagram * pFeynDiag)
 			,pFeynDiag->fP[i].toVert+1
 			,pFeynDiag->fV[pFeynDiag->fP[i].toVert].interType+1
 			,pFeynDiag->fP[i].toLegTyp+1);}
-	for(i=0; i<TotVertexes; i++){
+	for(i=0; i<TotVertices; i++){
 		for(j=0; j<pFeynDiag->fV[i].totTo; j++){
 			fprintf(FileOut, "H%d-->H%d (I%d.leg[%d]-->I%d.leg[%d])\n"
 				,i+1
@@ -131,7 +131,7 @@ void writeFeynDiag(struct feynDiagram * pFeynDiag)
 				,pFeynDiag->fV[pFeynDiag->fV[i].toVert[j]].interType+1
 				,pFeynDiag->fV[i].toLegTyp[j]+1);}}
 	fprintf(FileOut,"symmetryFactor = %d ",pFeynDiag->symmetryFactor);
-	for(i=0; i<TotVertexes; i++){
+	for(i=0; i<TotVertices; i++){
 		for(j=0; j<I[pFeynDiag->fV[i].interType].totLegTypes; j++){
 			if(I[pFeynDiag->fV[i].interType].multip[j]>1){
 				fprintf(FileOut, "*(1/%d!", I[pFeynDiag->fV[i].interType].multip[j]);
@@ -152,19 +152,19 @@ void writeFeynDiag(struct feynDiagram * pFeynDiag)
 int judgeConnection(struct feynDiagram * pFeynDiag)
 {
 	int i,j,k;
-	int group[MAX_I_VERTEXES];
-	int label[MAX_I_VERTEXES];
+	int group[MAX_I_VERTICES];
+	int label[MAX_I_VERTICES];
 	int totUnSettVert1,totUnSettVert2;
 	/////////////////////////////////
-	for(i=1; i<TotVertexes; i++){
+	for(i=1; i<TotVertices; i++){
 		group[i]=0;
 		label[i]=0;}
 	for(i=0; i<pFeynDiag->fV[0].totTo; i++){
 		group[pFeynDiag->fV[0].toVert[i]]=1;}
 	/////////////////////////////////
-	totUnSettVert1=totUnSettVert2=TotVertexes-1;
+	totUnSettVert1=totUnSettVert2=TotVertices-1;
 	do{
-		for(i=1; i<TotVertexes; i++){
+		for(i=1; i<TotVertices; i++){
 			if(label[i]==0){
 				if(group[i]==1){
 					totUnSettVert2--;
@@ -274,7 +274,7 @@ void feynTraverse()
 		toVert0=0;
 		toLegTyp0=0;}
 	else{																			//finding the (thisVert,thisLegTyp) field and the (toVert0,toLegTyp0) field
-		for(i=(FD.bookMark-TotExterParticles); i<TotVertexes&&thisVert==-1; i++){
+		for(i=(FD.bookMark-TotExterParticles); i<TotVertices&&thisVert==-1; i++){
 			if(FD.fV[i].interType<0)return;											//Note: this means the diagrams must contains vacuum popo; we crudely stop the traversing here.
 																					//The vacuum-to-vacuum diagrams are thus be excluded, please make modifications these diagrams are wanted.
 			for(j=0; j<I[FD.fV[i].interType].totLegTypes; j++){
@@ -294,7 +294,7 @@ void feynTraverse()
 			finishADiag();
 			return;}}
 	//////////////////////////////////////
-	for(i=toVert0; i<TotVertexes; i++){												//This is the ordered pairing that can avoid the arising of identical Feynman diagrams from vertex-relabeling.
+	for(i=toVert0; i<TotVertices; i++){												//This is the ordered pairing that can avoid the arising of identical Feynman diagrams from vertex-relabeling.
 		if(FD.fV[i].interType>=0){
 			k=FD.fV[i].interType;
 			for(j=(i==toVert0?toLegTyp0:0); j<I[k].totLegTypes; j++){
@@ -304,16 +304,16 @@ void feynTraverse()
 					unTryConnection(bookMarkJump, thisVert, thisLegTyp, i, j);}}}
 		else{																		//this means the interaction vertex for connecting is "new"
 			for(k=0; k<TotInterTypes; k++){
-				if(i>=TotVertexes-(I[k].totLegs-3))continue;
+				if(i>=TotVertices-(I[k].totLegs-3))continue;
 				for(j=0; j<I[k].totLegTypes; j++){
 					if(thisBorF==I[k].legType[j].BorF && thisID==I[k].legType[j].ID){
 						FD.fV[i].interType=k;
 						for(t=0; t<I[k].totLegTypes; t++)FD.fV[i].multip[t]=I[k].multip[t];
-						TotVertexes -= (I[k].totLegs-3);
+						TotVertices -= (I[k].totLegs-3);
 						tryConnection(bookMarkJump, thisVert, thisLegTyp, i, j);
 						feynTraverse();
 						unTryConnection(bookMarkJump, thisVert, thisLegTyp, i, j);
-						TotVertexes += (I[k].totLegs-3);
+						TotVertices += (I[k].totLegs-3);
 						FD.fV[i].interType=-1;}}}
 			break;}}
 	/////////////////////////////////////////

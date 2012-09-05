@@ -15,7 +15,7 @@ main()
 	for(i=0; i<TotExterParticles; i++){
 		FD.fP[i].toVert=-1;
 		FD.fP[i].toLegTyp=-1;}
-	for(i=0; i<TotVertexes; i++){
+	for(i=0; i<TotVertices; i++){
 		FD.fV[i].interType=-1;
 		FD.fV[i].totTo=0;}
 	FD.symmetryFactor=1;

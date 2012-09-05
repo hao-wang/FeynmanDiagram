@@ -16,7 +16,7 @@ struct interaction{										//this struct is used to describe a interaction ter
 
 /////////////// for feynman diagram ////////////////////
 #define MAX_E_PARTICLES 100								//max external particles
-#define MAX_I_VERTEXES 50								//max internal interaction vertexes
+#define MAX_I_VERTICES 50								//max internal interaction vertices
 
 struct feynDiagExterPar{								//this struct describes how an external particle in the Feynman diagram is connected to a vertex
 	int toVert;											//the vertex (ID number) this external particle point to
@@ -35,7 +35,7 @@ struct feynDiagVertex{									//this struct describes the temporary state of an
 typedef
 struct feynDiagram{
 	struct feynDiagExterPar fP[MAX_E_PARTICLES];
-	struct feynDiagVertex fV[MAX_I_VERTEXES];
+	struct feynDiagVertex fV[MAX_I_VERTICES];
 	int symmetryFactor;
 	int fermionSign;
 	int bookMark;										//used to identify the stage of the traversing process.
