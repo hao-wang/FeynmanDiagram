@@ -101,7 +101,7 @@ Explanations of the above input file:
         If one wants to write an interaction term composed of multiple identical "fermion"s,
         for example, 'e- e- mu+ mu+', one should write the input as
         "4> F1 F1 F-2 F-2" instead of "2> F1:2 F-2:2".
-        See "http://arxiv/abs/1209.****" for explanations.
+        See "http://arxiv/abs/1209.0949" for explanations.
 4) After telling the program that there are totally 4 external particles under the 
    label line "total number of incoming and outgoing particles >>>",
    the user should list the 4 incoming and outgoing particles under the label line
