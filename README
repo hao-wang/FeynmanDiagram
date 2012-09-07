@@ -37,7 +37,7 @@ http://arxiv/abs/1209.0949
 2. Put the excutable file and the input file "input.txt" in the same directory.
 3. Modify the "input.txt" according to your needs (see below).
 3. Run the excutable file.
-4. The results are contained in the generated output file "output.txt" (see below).
+4. The results are contained in the generated output file "output-feynman-diagrams.txt" (see below).
 
 
                      *********************
