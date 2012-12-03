@@ -149,7 +149,7 @@ void writeFeynDiag(struct feynDiagram * pFeynDiag)
 	fprintf(FileOut, "------------------------------------------------\n");
 }
 
-int judgeConnection(struct feynDiagram * pFeynDiag)
+int judgeConnectivity(struct feynDiagram * pFeynDiag)
 {
 	int i,j,k;
 	int group[MAX_I_VERTICES];
@@ -190,7 +190,7 @@ int judgeConnection(struct feynDiagram * pFeynDiag)
 
 void finishADiag()
 {
-	if(judgeConnection(&FD)==1){
+	if(judgeConnectivity(&FD)==1){
 		fprintf(FileOut, "(%d)\n", ++FDCount);
 		writeFeynDiag(&FD);}
 }
@@ -221,7 +221,7 @@ int fermionAcrossSign(int startVN, int startVL, int endVN, int endVL)
 }
 
 
-void tryConnection(int bookMarkJump, int thisVN, int thisVL, int toVN, int toVL)
+void tryPairing(int bookMarkJump, int thisVN, int thisVL, int toVN, int toVL)
 {
 	if(FD.bookMark<TotExterParticles){
 		FD.symmetryFactor*=FD.fV[toVN].multip[toVL];
@@ -240,7 +240,7 @@ void tryConnection(int bookMarkJump, int thisVN, int thisVL, int toVN, int toVL)
 	FD.bookMark+=bookMarkJump;
 }
 
-void unTryConnection(int bookMarkJump, int thisVN, int thisVL, int toVN, int toVL)				//anti-operations to tryConnection(), i.e. resume to the state before the try. 
+void unTryPairing(int bookMarkJump, int thisVN, int thisVL, int toVN, int toVL)				//anti-operations to tryPairing(), i.e. resume to the state before the try. 
 {
 	FD.bookMark-=bookMarkJump;
 	if(FD.bookMark<TotExterParticles){
@@ -299,9 +299,9 @@ void feynTraverse()
 			k=FD.fV[i].interType;
 			for(j=(i==toVert0?toLegTyp0:0); j<I[k].totLegTypes; j++){
 				if(FD.fV[i].multip[j]>0 && thisBorF==I[k].legType[j].BorF && thisID==I[k].legType[j].ID){
-					tryConnection(bookMarkJump, thisVert, thisLegTyp, i, j);
+					tryPairing(bookMarkJump, thisVert, thisLegTyp, i, j);
 					feynTraverse();
-					unTryConnection(bookMarkJump, thisVert, thisLegTyp, i, j);}}}
+					unTryPairing(bookMarkJump, thisVert, thisLegTyp, i, j);}}}
 		else{																		//this means the interaction vertex for connecting is "new"
 			for(k=0; k<TotInterTypes; k++){
 				if(i>=TotVertices-(I[k].totLegs-3))continue;
@@ -310,9 +310,9 @@ void feynTraverse()
 						FD.fV[i].interType=k;
 						for(t=0; t<I[k].totLegTypes; t++)FD.fV[i].multip[t]=I[k].multip[t];
 						TotVertices -= (I[k].totLegs-3);
-						tryConnection(bookMarkJump, thisVert, thisLegTyp, i, j);
+						tryPairing(bookMarkJump, thisVert, thisLegTyp, i, j);
 						feynTraverse();
-						unTryConnection(bookMarkJump, thisVert, thisLegTyp, i, j);
+						unTryPairing(bookMarkJump, thisVert, thisLegTyp, i, j);
 						TotVertices += (I[k].totLegs-3);
 						FD.fV[i].interType=-1;}}}
 			break;}}
